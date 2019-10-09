@@ -221,6 +221,7 @@ sucode
         set_sshd PermitRootLogin no -y
         set_sshd PubkeyAuthentication yes -y
         set_sshd PasswordAuthentication no -y
+        set_sshd AllowUsers ${username} -y
 
         echo
         prnt -i "SSHD status:"
