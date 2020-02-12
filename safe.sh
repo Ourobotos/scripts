@@ -138,34 +138,40 @@ sucode
         # check if SElinux
         if command -v getenforce > /dev/null; then
             prnt -i "SElinux is installed."
-
-            # enforce selinux
-            if [ getenforce != Enforcing ]; then
-                setenforce 1
-                [ $? -ne 0 ] && prnt -e "Enforce Selinux Fail, exit." && exit 1
-            fi
-            prnt -i "SElinux is running."
-
-            # install selinux manager
-            if ! command -v semanage > /dev/null; then
-                echo " Install SElinux manager. "
-                yum -y install policycoreutils-python
-                [ $? -ne 0 ] && prnt -e "Install Selinux manger fail, exit." && exit 1
-            fi
-            prnt -i "SElinux manager is installed."
-
-            #  add new port
-            if echo "(`semanage port -l | grep ssh_port_t`)[@]" | grep -w ${newport} &>/dev/null; then
-                prnt -i "SElinux already open ssh port ${newport}${c_end}"
+            
+            if [ `getenforce` == "Disabled"]; then
+                prnt -i "SElinux is disabled"
             else
-                semanage port -a -t ssh_port_t -p tcp $newport &> /dev/null
-                if [ $? -eq 0 ];then
-                    prnt -i "SElinux add ssh port ${newport}"
-                else
-                    prnt -e "SElinux add ssh port ${newport} fail"
-                    exit
-                fi
+                setenforce 0
+                [ $? -ne 0 ] && prnt -e "Close Selinux Fail, exit." && exit 1
             fi
+            # # enforce selinux
+            # if [ getenforce != Enforcing ]; then
+            #     setenforce 1
+            #     [ $? -ne 0 ] && prnt -e "Enforce Selinux Fail, exit." && exit 1
+            # fi
+            # prnt -i "SElinux is running."
+
+            # # install selinux manager
+            # if ! command -v semanage > /dev/null; then
+            #     echo " Install SElinux manager. "
+            #     yum -y install policycoreutils-python
+            #     [ $? -ne 0 ] && prnt -e "Install Selinux manger fail, exit." && exit 1
+            # fi
+            # prnt -i "SElinux manager is installed."
+
+            # #  add new port
+            # if echo "(`semanage port -l | grep ssh_port_t`)[@]" | grep -w ${newport} &>/dev/null; then
+            #     prnt -i "SElinux already open ssh port ${newport}${c_end}"
+            # else
+            #     semanage port -a -t ssh_port_t -p tcp $newport &> /dev/null
+            #     if [ $? -eq 0 ];then
+            #         prnt -i "SElinux add ssh port ${newport}"
+            #     else
+            #         prnt -e "SElinux add ssh port ${newport} fail"
+            #         exit
+            #     fi
+            # fi
         fi
 
         # check if Firewall
