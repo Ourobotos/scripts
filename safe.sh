@@ -139,11 +139,8 @@ sucode
         if command -v getenforce > /dev/null; then
             prnt -i "SElinux is installed."
             
-            if [ `getenforce` == "Disabled"]; then
-                prnt -i "SElinux is disabled"
-            else
+            if [ `getenforce` != "Disabled"]; then
                 setenforce 0
-                [ $? -ne 0 ] && prnt -e "Close Selinux Fail, exit." && exit 1
             fi
             # # enforce selinux
             # if [ getenforce != Enforcing ]; then
