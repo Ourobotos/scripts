@@ -139,7 +139,7 @@ sucode
         if command -v getenforce > /dev/null; then
             prnt -i "SElinux is installed."
             
-            if [ `getenforce` != "Disabled"]; then
+            if [ getenforce != Disabled ]; then
                 setenforce 0
             fi
             # # enforce selinux
